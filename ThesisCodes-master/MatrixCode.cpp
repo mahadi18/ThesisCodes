@@ -1,26 +1,30 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+vector<int>pos;
+vector<int>f1;
 int main()
 {
-    freopen("input.txt", "r", stdin);
+    freopen("input4.txt", "r", stdin);
+    freopen("output4.txt", "w", stdout);
+
     int k;
-    cout<<"Enter number of data bit: ";
+    /***********Enter number of data bit *********/
     cin>>k;
 
     int row = k/8;
     int columnParity[5*row+1];
-    int xerror[256],cerror[5*row+1];
+    int xerror[256],cerror[5*row+1],xCorrect[256];
     bool rowError[row+1];
     int x[256];
     int sp[8];
     int sc[5*row+1];
     int DED[row+1];
     int Oi[row+1];
+    pos.clear();
     memset(Oi, 0, sizeof(Oi));
     memset(DED, 0, sizeof(DED));
 
-    cout<<endl<<"Enter data bits : "<<endl;
+    /*********** Enter data bits***************/
     for(int i=0; i<k; i++)
         cin>>x[i];
 
@@ -47,7 +51,7 @@ int main()
     }
 
     /************* Print Matrix ***********/
-    cout<<endl<<endl;
+    cout<<"Input Data Matrix : "<<endl<<endl;
 
     for(int i = 0,temp=0,j=0; i<k; i++)
     {
@@ -72,7 +76,7 @@ int main()
     cout<<endl<<endl;
 
     /************ Erroneous Data *********/
-    cout<<endl<<"Enter erroneous data bits : "<<endl;
+    cout<<endl<<"Erroneous data bits : "<<endl;
 
     for(int i=0; i<k; i++)
         cin>>xerror[i];
@@ -129,19 +133,19 @@ int main()
     /**********sp and sc calculation***********/
     for(int i=0; i<8; i++)
     {
-        sp[i] = parity[i] ^ parityError[i];
+        sp[i] = abs(parity[i] - parityError[i]);
     }
-    cout<<"\n\nSP = ";
+    cout<<"\n\nSP =   ";
     for(int i=0; i<8; i++)
     {
-        cout<<sp[i]<<" ";
+        cout<<sp[i]<<"   ";
     }
     cout<<endl;
     for(int i=0; i<5*row; i++)
     {
         sc[i] = columnParity[i] ^ cerror[i];
     }
-    cout<<"\n\nSc = ";
+    cout<<"\nSC = ";
     for(int i=0; i<5*row; i++)
     {
         if(i%5==0) cout<<"  ";
@@ -149,68 +153,104 @@ int main()
     }
     cout<<endl<<"\n\n";
 
-    cout<<"Err Data: \n";
-    for(int i=0; i<k; i++)
-        cout<<xerror[i]<<" ";
-    cout<<endl<<endl;
 
     /********Double error detection**********/
 
-    int pp=0, cc=0, f=1;
-    for(int i=0; i<row; i++)
+    int flag4 = 0,pp[row];
+    memset(pp, 0, sizeof(pp));//here pp arrary is the first 4 bit of any 1
+
+    for(int i = 0; i<row; i++)
     {
         int j;
-        for(j=1; j<5; j++)
+        for( j = 0; j<4; j++)
         {
-            if(sc[f*j-1]==1)
+
+            if (sc[i*5+j]==1)
             {
-                cc = 1;
+                flag4 = 1;
+                pp[i]=1;
+                j=4;
                 break;
             }
         }
-        if(sc[f*j-1]==1)
+
+        if (flag4 == 1 && sc[j+i*5]== 0)
+            DED[i]= 1;
+
+        else if (flag4==1 && sc[j+i*5]== 0)
         {
-            pp = 1;
-            Oi[i] = 1;
+            DED[i]=0;
         }
-        else Oi[i] = 0;
 
-        if(cc=1 && pp==0) DED[i] = 1;
-        else if(cc==1 && pp==1) DED[i] = 0;
-        else DED[i]=0;
-        f++;
-        pp=0;
-        cc=0;
+        Oi[i]=sc[j+i*5];
+        cout << "oi "<< i << "  value "<<Oi[i]<<endl;
+
+        flag4=0;
     }
-
-    cout<<"Err Data: \n";
-    for(int i=0; i<k; i++)
-        cout<<xerror[i]<<" ";
-    cout<<endl<<endl;
-
 
     /**************** Error Correction ******************/
 
-
-
-
-
-
-
-
-
-    for(int i=0; i<k; i++)
+    for(int i=0;i<k;i++)
     {
-        xerror[i] = ( xerror[i] ^ Oi[i%5] ) ^ ( DED[i%5] * sp[i%8] );
+        xCorrect[i]=xerror[i];
     }
 
-    /* Print Corrected data */
+    for(int i=0; i<row; i++)
+    {
+        if(DED[i]==1)
+        {
+            int position[10];
+            memset(position, 0, sizeof(position));
 
-    cout<<"||*************** So, Original Data ***************||  \n";
+            for(int j=0,l=0; j<8; j++)
+            {
+                if(sp[j]==1)
+                {
+                    f1.push_back(j);
+                }
+            }
+
+            for(int j=0;j<f1.size();j++)
+            {
+                position[j]=i*8+f1[j];
+                pos.push_back(position[j]);
+                cout<<"\n In row "<<i+1<<" position "<<pos[j]<<""<<endl;
+            }
+
+            for(int j=0; j<pos.size(); j++)
+            {
+                xCorrect[pos[j]] = ( xerror[pos[j]] ^ Oi[i] ) ^ ( DED[i] * sp[pos[j]%8] );
+
+            }
+            pos.clear();
+            f1.clear();
+
+        }
+
+    }
+    cout<<endl;
+
+    cout<<"************* Original Data Matrix was: ***********\n\n";
+
+    for(int i = 0,temp=0,j=0; i<k; i++)
+    {
+        if(i%8==0) cout<<" || ";
+        cout<<x[i]<<" ";
+        if((i+1)%8==0)
+        {
+            cout<<" || ";
+            cout<<endl;
+
+        }
+    }
+
+    cout<<endl<<endl;
+
+    cout<<"*************** Corrected Data matrix was: ***************\n\n";
     for(int i=0; i<k; i++)
     {
         if(i%8==0) cout<<" || ";
-        cout<<xerror[i]<<" ";
+        cout<<xCorrect[i]<<" ";
         if( (i+1)%8==0) cout<<" || "<<endl;
     }
 

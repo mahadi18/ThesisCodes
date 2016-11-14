@@ -1,0 +1,59 @@
+Input Data Matrix : 
+
+ || 1 0 1 1 1 0 0 1  || 1 1 1 0 1  || 
+ || 0 1 1 0 0 1 1 1  || 0 1 1 1 1  || 
+ || 1 1 0 0 1 1 0 0  || 1 0 1 0 0  || 
+ || 1 1 0 1 1 1 0 0  || 0 1 0 0 1  || 
+ || 1 1 0 0 1 1 1 0  ||            ||
+
+
+Erroneous data bits : 
+
+ || 1 0 1 1 1 0 0 1  || 1 1 1 0 1  || 
+ || 0 0 1 0 0 0 1 1  || 1 0 0 0 1  || 
+ || 1 1 0 1 1 1 1 0  || 1 0 0 1 0  || 
+ || 1 1 0 1 1 1 0 0  || 0 1 0 0 1  || 
+ || 1 0 0 1 1 0 0 0  ||            ||
+
+
+SP =   0   1   0   1   0   1   1   0   
+
+SC =   0 0 0 0 0   1 1 1 1 0   0 0 1 1 0   0 0 0 0 0 
+
+
+oi 0  value 0
+oi 1  value 0
+oi 2  value 0
+oi 3  value 0
+
+ In row 2 position 9
+
+ In row 2 position 11
+
+ In row 2 position 13
+
+ In row 2 position 14
+
+ In row 3 position 17
+
+ In row 3 position 19
+
+ In row 3 position 21
+
+ In row 3 position 22
+
+************* Original Data Matrix was: ***********
+
+ || 1 0 1 1 1 0 0 1  || 
+ || 0 1 1 0 0 1 1 1  || 
+ || 1 1 0 0 1 1 0 0  || 
+ || 1 1 0 1 1 1 0 0  || 
+
+
+*************** Corrected Data matrix was: ***************
+
+ || 1 0 1 1 1 0 0 1  || 
+ || 0 1 1 1 0 1 0 1  || 
+ || 1 0 0 0 1 0 0 0  || 
+ || 1 1 0 1 1 1 0 0  || 
+
