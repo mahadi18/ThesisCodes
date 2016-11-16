@@ -1,11 +1,23 @@
 #include <bits/stdc++.h>
 using namespace std;
-vector<int>pos;
+vector<int>pos[32];
 vector<int>f1;
+vector<int>box;
+vector<int>errPos;
+
+int ham[4][8]=
+{
+    {1, 1, 0, 1, 1, 0, 1, 0},
+    {1, 0, 1, 1, 0, 1, 1, 0},
+    {0, 1, 1, 1, 0, 0, 0, 1},
+    {0, 0, 0, 0, 1, 1, 1, 1}
+
+};
+
 int main()
 {
-    freopen("input4.txt", "r", stdin);
-    freopen("output4.txt", "w", stdout);
+    freopen("input1.txt", "r", stdin);
+    freopen("output1.txt", "w", stdout);
 
     int k;
     /***********Enter number of data bit *********/
@@ -20,7 +32,7 @@ int main()
     int sc[5*row+1];
     int DED[row+1];
     int Oi[row+1];
-    pos.clear();
+    //pos.clear();
     memset(Oi, 0, sizeof(Oi));
     memset(DED, 0, sizeof(DED));
 
@@ -183,76 +195,123 @@ int main()
         }
 
         Oi[i]=sc[j+i*5];
-        cout << "oi "<< i << "  value "<<Oi[i]<<endl;
+        //cout << "oi "<< i << "  value "<<Oi[i]<<endl;
 
         flag4=0;
     }
 
     /**************** Error Correction ******************/
 
-    for(int i=0;i<k;i++)
+    for(int i=0; i<k; i++)
     {
-        xCorrect[i]=xerror[i];
+        xCorrect[i]=xerror[i];  // Initializing correction array with error bits.
     }
+
+
 
     for(int i=0; i<row; i++)
     {
         if(DED[i]==1)
         {
-            int position[10];
-            memset(position, 0, sizeof(position));
-
-            for(int j=0,l=0; j<8; j++)
+            for(int j=0; j<8; j++)
             {
                 if(sp[j]==1)
                 {
-                    f1.push_back(j);
+                    pos[i].push_back(j);
                 }
             }
-
-            for(int j=0;j<f1.size();j++)
-            {
-                position[j]=i*8+f1[j];
-                pos.push_back(position[j]);
-                cout<<"\n In row "<<i+1<<" position "<<pos[j]<<""<<endl;
-            }
-
-            for(int j=0; j<pos.size(); j++)
-            {
-                xCorrect[pos[j]] = ( xerror[pos[j]] ^ Oi[i] ) ^ ( DED[i] * sp[pos[j]%8] );
-
-            }
-            pos.clear();
-            f1.clear();
-
         }
 
     }
     cout<<endl;
 
-    cout<<"************* Original Data Matrix was: ***********\n\n";
-
-    for(int i = 0,temp=0,j=0; i<k; i++)
+    for(int i=0; i<4; i++)
     {
-        if(i%8==0) cout<<" || ";
-        cout<<x[i]<<" ";
-        if((i+1)%8==0)
+        int fg = 0;
+
+        for(int j=0; j<pos[i].size(); j++)
         {
-            cout<<" || ";
-            cout<<endl;
+            fg = 1;
+            box.push_back(pos[i][j]);
 
         }
-    }
+        if (fg == 0) goto OUT;
 
+        for(int a=0; a<pos[i].size()-1; a++) // (a, b) makes pair combination of detected column
+        {
+
+            for(int b=a+1; b<pos[i].size(); b++)
+            {
+                int cn=0, sn[4]= {0,0,0,0};
+                for(int hamRow=0; hamRow<4; hamRow++)
+                {
+
+                    if( (ham[hamRow][box[a]]==1 && ham[hamRow][box[b]]==1) || (ham[hamRow][box[a]]==0 && ham[hamRow][box[b]]==0) )
+                    {
+                        sn[hamRow] = 0;
+                    }
+                    else sn[hamRow] = 1;
+
+                    if(sc[i*5+hamRow] != sn[hamRow])
+                    {
+                        cn=0;
+                        break;
+                    }
+                    else
+                    {
+                        cn++;
+                    }
+                }
+                if(cn==4)
+                {
+                    errPos.push_back(i*8+box[a]);
+                    errPos.push_back(i*8+box[b]);
+                    goto OUT;
+                }
+            }
+        }
+OUT:
+
+        box.clear();
+
+    }
+    cout<<endl;
+
+    if(!errPos.empty())
+    {
+        cout<<"In data bit, Error positions are:  ";
+        for(int i=0; i<errPos.size(); i++)
+        {
+            cout<<errPos[i]<<"  ";
+            xCorrect[errPos[i]] = ( xerror[errPos[i]] ^ Oi[errPos[i]/8] ) ^ ( DED[errPos[i]/8] * sp[errPos[i]%8] );
+        }
+    }
     cout<<endl<<endl;
 
-    cout<<"*************** Corrected Data matrix was: ***************\n\n";
-    for(int i=0; i<k; i++)
-    {
-        if(i%8==0) cout<<" || ";
-        cout<<xCorrect[i]<<" ";
-        if( (i+1)%8==0) cout<<" || "<<endl;
-    }
+
+        cout<<"************** Original Data Matrix was: ***********\n\n";
+
+        for(int i = 0,temp=0,j=0; i<k; i++)
+        {
+            if(i%8==0) cout<<" || ";
+            cout<<x[i]<<" ";
+            if((i+1)%8==0)
+            {
+                cout<<" || ";
+                cout<<endl;
+
+            }
+        }
+
+        cout<<endl<<endl;
+
+        cout<<"*************** Corrected Data matrix is: ***************\n\n";
+        for(int i=0; i<k; i++)
+        {
+            if(i%8==0) cout<<" || ";
+            cout<<xCorrect[i]<<" ";
+            if( (i+1)%8==0) cout<<" || "<<endl;
+        }
 
 
 
