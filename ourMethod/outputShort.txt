@@ -11,29 +11,29 @@ Correct = 32 Wrong = 0 Correct percentage =  100.00 %
 
 
 
-Correct = 444 Wrong = 52 Correct percentage =  89.52 %
+Correct = 496 Wrong = 0 Correct percentage =  100.00 %
 
 
  Three Errors: 
 
 
 
-Correct = 3548 Wrong = 1412 Correct percentage =  71.53 %
+Correct = 4124 Wrong = 836 Correct percentage =  83.15 %
 
 
  Four Errors: 
 
 
 
-Correct = 18106 Wrong = 17854 Correct percentage =  50.35 %
+Correct = 20244 Wrong = 15716 Correct percentage =  56.30 %
 
 
  Four Errors: 
 
 
 
-Correct = 60472 Wrong = 140904 Correct percentage =  30.03 %
+Correct = 57220 Wrong = 144156 Correct percentage =  28.41 %
 
 
 
-Total Correct percentage =  34.02 %
+Total Correct percentage =  33.82 %
