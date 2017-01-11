@@ -282,7 +282,7 @@ void errorDetection()
                             }
                         }
 
-                        if(same==4)
+                        if(same==4 && sp[col1]==1 && sp[col2]==1 && sp[col3==1])
                         {
                             errorBitPostion.push_back(i*8+col1);
                             errorBitPostion.push_back(i*8+col2);
@@ -326,7 +326,7 @@ void errorDetection()
                                     }
                                 }
 
-                                if(same==4)
+                                if(same==4 && sp[col1]==1 && sp[col2]==1 && sp[col3]==1 && sp[col4] && sp[col5])
                                 {
                                     errorBitPostion.push_back(i*8+col1);
                                     errorBitPostion.push_back(i*8+col2);
@@ -375,7 +375,7 @@ void errorDetection()
                                             }
                                         }
 
-                                        if(same==4)
+                                        if(same==4 && sp[col1]==1 && sp[col2]==1 && sp[col3]==1 && sp[col4]==1 && sp[col5]==1 && sp[col6]==1 && sp[col7])
                                         {
                                             errorBitPostion.push_back(i*8+col1);
                                             errorBitPostion.push_back(i*8+col2);
@@ -421,7 +421,7 @@ void errorDetection()
                         }
                     }
 
-                    if(same==4)
+                    if(same==4 && sp[col1]==1 && sp[col2]==1)
                     {
                         errorBitPostion.push_back(i*8+col1);
                         errorBitPostion.push_back(i*8+col2);
@@ -460,7 +460,7 @@ void errorDetection()
                                 }
                             }
 
-                            if(same==4)
+                            if(same==4&& sp[col1]==1 && sp[col2]==1 && sp[col3]==1 && sp[col4]==1)
                             {
                                 errorBitPostion.push_back(i*8+col1);
                                 errorBitPostion.push_back(i*8+col2);
@@ -508,8 +508,9 @@ void errorDetection()
                                         }
                                     }
 
-                                    if(same==4)
+                                    if(same==4 && sp[col1]==1 && sp[col2]==1 && sp[col3]==1 && sp[col4]==1 && sp[col5]==1 && sp[col6]==1 )
                                     {
+
                                         errorBitPostion.push_back(i*8+col1);
                                         errorBitPostion.push_back(i*8+col2);
                                         errorBitPostion.push_back(i*8+col3);
@@ -572,7 +573,8 @@ void errorDetection()
                                                 }
                                             }
 
-                                            if(same==4)
+                                            if(same==4&& sp[col1]==1 && sp[col2]==1 && sp[col3]==1 && sp[col4]==1 && sp[col5]==1 && sp[col6]==1 && sp[col7] && sp[col8])
+
                                             {
                                                 errorBitPostion.push_back(i*8+col1);
                                                 errorBitPostion.push_back(i*8+col2);
@@ -677,20 +679,20 @@ CORRECTION:
     //cout<<endl;
     int ok=1;
 
-    cout<<"Generated: ";
-    for(int aa=0; aa<genErr.size(); aa++)
-        cout<<genErr[aa]<<" ";
-    //cout<<endl;
-
-
-    cout<<"Detected: ";
-    for(int aa=0; aa<errorBitPostion.size(); aa++)
-        cout<<errorBitPostion[aa]<<" ";
-    //cout<<endl;
+//    cout<<"Generated: ";
+//    for(int aa=0; aa<genErr.size(); aa++)
+//        cout<<genErr[aa]<<" ";
+//    //cout<<endl;
+//
+//
+//    cout<<"Detected: ";
+//    for(int aa=0; aa<errorBitPostion.size(); aa++)
+//        cout<<errorBitPostion[aa]<<" ";
+//    //cout<<endl;
 
     if(genErr.size() != errorBitPostion.size())
     {
-        cout<<" Status: Wrong "<<endl;
+       // cout<<" Status: Wrong "<<endl;
         wrong++;
     }
     else
@@ -700,7 +702,7 @@ CORRECTION:
         {
             if(genErr[i] != errorBitPostion[i])
             {
-                cout<<" Status: Wrong"<<endl;
+                //cout<<" Status: Wrong"<<endl;
                 wrong++;
                 ok=0;
                 break;
@@ -708,7 +710,7 @@ CORRECTION:
         }
         if(ok==1)
         {
-            cout<<" Status: OK"<<endl;
+           // cout<<" Status: OK"<<endl;
             correct++;
         }
     }
@@ -724,7 +726,7 @@ CORRECTION:
 int main()
 {
     freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    freopen("outputShort.txt", "w", stdout);
     //cout<<" ************ Check The Output *************"<<endl;
 
 
