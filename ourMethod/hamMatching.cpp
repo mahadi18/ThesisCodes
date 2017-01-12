@@ -24,13 +24,17 @@ int ham[4][8]=
     {0, 0, 0, 0, 1, 1, 1, 1}
 
 };
+int x[32]= { 1, 0, 1, 1, 1, 0, 0, 1,
+             0, 1, 1, 0, 0, 1, 1, 1,
+             1, 1, 0, 0, 1, 1, 0, 0,
+             1, 1, 0, 1, 1, 1, 0, 0
+           };
 
 int k;
 int row;
 int columnParity[100];
 int xerror[256],cerror[100],xCorrect[256];
 bool rowError[100];
-int x[256];
 int sp[8];
 int sc[100];
 int DED[100];
@@ -692,7 +696,7 @@ CORRECTION:
 
     if(genErr.size() != errorBitPostion.size())
     {
-       // cout<<" Status: Wrong "<<endl;
+        //cout<<" Status: Wrong "<<endl;
         wrong++;
     }
     else
@@ -710,7 +714,7 @@ CORRECTION:
         }
         if(ok==1)
         {
-           // cout<<" Status: OK"<<endl;
+            //cout<<" Status: OK"<<endl;
             correct++;
         }
     }
@@ -725,22 +729,22 @@ CORRECTION:
 
 int main()
 {
-    freopen("input.txt", "r", stdin);
-    freopen("outputShort.txt", "w", stdout);
+    freopen("new6.txt", "r", stdin);
+    freopen("new6_out.txt", "w", stdout);
+
+
     //cout<<" ************ Check The Output *************"<<endl;
 
-
-
     /***********Enter number of data bit *********/
-    cin>>k;
+    k=32;
     row = k/8;
     //pos.clear();
     memset(Oi, 0, sizeof(Oi));
     memset(DED, 0, sizeof(DED));
 
     /*********** Enter data bits***************/
-    for(int i=0; i<k; i++)
-        cin>>x[i];
+//    for(int i=0; i<k; i++)
+//        cin>>x[i];
 
     for(int i=0, j=5*row-1; i<row; i++)
     {
@@ -794,265 +798,46 @@ int main()
 
     /************ Erroneous Data *********/
 
+    for(int i=0; i<k; i++)
+        xerror[i]=x[i];
 
-    /* Occur Single Error */
-    cout<<"\n\n Single Error: \n\n";
-    //cout<<" Generated Error in bit    Detected Error in bit    Status\n";
-    //cout<<" ~~~~~~~~~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~    ~~~~~~\n";
-    for(int bit=0; bit<32; bit++)
+    while(1)
     {
+        stringstream ss;
+        string s;
+        getline(cin, s);
+
+        if(s=="END") break;
+
+        ss << s;
+        int val;
+        genErr.clear();
+        while(ss >> val)
+        {
+            if(xerror[val]==1) xerror[val]=0;
+            else xerror[val]=1;
+            genErr.push_back(val);
+        }
+        errorDetection();
+
+
+
         for(int i=0; i<k; i++)
         {
-            xerror[i]=x[i];
+            xerror[i] = x[i];
         }
-        //xerror[i]==x[i];
-
-        if(xerror[bit]==0) xerror[bit]=1;
-        else xerror[bit]=0;
-
-        genErr.push_back(bit);
-        errorDetection();
     }
 
-    cout<<"\n\nCorrect = "<<correct<<" Wrong = "<<wrong;
-    printf(" Correct percentage =  %0.2f", (double) (100*correct)/(correct+wrong) );
-    cout<<" %"<<endl;
+    cout<<"Correct = "<<correct<<"\tWrong = "<<wrong;
+    printf("\tCorrect percentage =  %0.2f", (double) (100*correct)/(correct+wrong) );
+    cout<<" %\n\n"<<endl;
     totalCorrect += correct;
     totalWrong += wrong;
     correct=0;
     wrong=0;
 
-    /* Occur Two Errors */
-    cout<<"\n\n Double Errors: \n\n";
-    //cout<<" Generated Error in bit    Detected Error in bit    Status\n";
-    //cout<<" ~~~~~~~~~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~    ~~~~~~\n";
-    for(int bit1=0; bit1<31; bit1++)
-    {
-        for(int bit2=bit1+1; bit2<32; bit2++)
-        {
-            for(int i=0; i<k; i++)
-            {
-                xerror[i]=x[i];
-            }
-            //xerror[i]==x[i];
 
-            if(xerror[bit1]==0) xerror[bit1]=1;
-            else xerror[bit1]=0;
-
-            if(xerror[bit2]==0) xerror[bit2]=1;
-            else xerror[bit2]=0;
-
-            genErr.push_back(bit1);
-            genErr.push_back(bit2);
-            errorDetection();
-        }
-
-    }
-
-    cout<<"\n\nCorrect = "<<correct<<" Wrong = "<<wrong;
-    printf(" Correct percentage =  %0.2f", (double) (100*correct)/(correct+wrong) );
-    cout<<" %"<<endl;
-    totalCorrect += correct;
-    totalWrong += wrong;
-    correct=0;
-    wrong=0;
-
-    /* Occur Three Errors */
-    cout<<"\n\n Three Errors: \n\n";
-
-    for(int bit1=0; bit1<30; bit1++)
-    {
-        for(int bit2=bit1+1; bit2<31; bit2++)
-        {
-            for(int bit3=bit2+1; bit3<32; bit3++)
-            {
-                for(int i=0; i<k; i++)
-                {
-                    xerror[i]=x[i];
-                }
-                //xerror[i]==x[i];
-
-                if(xerror[bit1]==0) xerror[bit1]=1;
-                else xerror[bit1]=0;
-
-                if(xerror[bit2]==0) xerror[bit2]=1;
-                else xerror[bit2]=0;
-
-                if(xerror[bit3]==0) xerror[bit3]=1;
-                else xerror[bit3]=0;
-
-                genErr.push_back(bit1);
-                genErr.push_back(bit2);
-                genErr.push_back(bit3);
-                errorDetection();
-            }
-        }
-
-    }
-
-    cout<<"\n\nCorrect = "<<correct<<" Wrong = "<<wrong;
-    printf(" Correct percentage =  %0.2f", (double) (100*correct)/(correct+wrong) );
-    cout<<" %"<<endl;
-    totalCorrect += correct;
-    totalWrong += wrong;
-    correct=0;
-    wrong=0;
-
-    /* Occur Four Errors */
-    cout<<"\n\n Four Errors: \n\n";
-
-    for(int bit1=0; bit1<29; bit1++)
-    {
-        for(int bit2=bit1+1; bit2<30; bit2++)
-        {
-            for(int bit3=bit2+1; bit3<31; bit3++)
-            {
-                for(int bit4=bit3+1; bit4<32; bit4++)
-                {
-                    for(int i=0; i<k; i++)
-                    {
-                        xerror[i]=x[i];
-                    }
-                    //xerror[i]==x[i];
-
-                    if(xerror[bit1]==0) xerror[bit1]=1;
-                    else xerror[bit1]=0;
-
-                    if(xerror[bit2]==0) xerror[bit2]=1;
-                    else xerror[bit2]=0;
-
-                    if(xerror[bit3]==0) xerror[bit3]=1;
-                    else xerror[bit3]=0;
-
-                    if(xerror[bit4]==0) xerror[bit4]=1;
-                    else xerror[bit4]=0;
-
-
-                    genErr.push_back(bit1);
-                    genErr.push_back(bit2);
-                    genErr.push_back(bit3);
-                    genErr.push_back(bit4);
-                    errorDetection();
-                }
-            }
-        }
-    }
-
-    cout<<"\n\nCorrect = "<<correct<<" Wrong = "<<wrong;
-    printf(" Correct percentage =  %0.2f", (double) (100*correct)/(correct+wrong) );
-    cout<<" %"<<endl;
-    totalCorrect += correct;
-    totalWrong += wrong;
-    correct=0;
-    wrong=0;
-
-    /* Occur Four Errors */
-    cout<<"\n\n Four Errors: \n\n";
-
-    for(int bit1=0; bit1<28; bit1++)
-    {
-        for(int bit2=bit1+1; bit2<29; bit2++)
-        {
-            for(int bit3=bit2+1; bit3<30; bit3++)
-            {
-                for(int bit4=bit3+1; bit4<31; bit4++)
-                {
-                    for(int bit5=bit4+1; bit5<32; bit5++)
-                    {
-                        for(int i=0; i<k; i++)
-                        {
-                            xerror[i]=x[i];
-                        }
-                        //xerror[i]==x[i];
-
-                        if(xerror[bit1]==0) xerror[bit1]=1;
-                        else xerror[bit1]=0;
-
-                        if(xerror[bit2]==0) xerror[bit2]=1;
-                        else xerror[bit2]=0;
-
-                        if(xerror[bit3]==0) xerror[bit3]=1;
-                        else xerror[bit3]=0;
-
-                        if(xerror[bit4]==0) xerror[bit4]=1;
-                        else xerror[bit4]=0;
-
-                        if(xerror[bit5]==0) xerror[bit5]=1;
-                        else xerror[bit5]=0;
-
-
-                        genErr.push_back(bit1);
-                        genErr.push_back(bit2);
-                        genErr.push_back(bit3);
-                        genErr.push_back(bit4);
-                        genErr.push_back(bit5);
-
-                        errorDetection();
-                    }
-                }
-            }
-        }
-    }
-
-    cout<<"\n\nCorrect = "<<correct<<" Wrong = "<<wrong;
-    printf(" Correct percentage =  %0.2f", (double) (100*correct)/(correct+wrong) );
-    cout<<" %"<<endl;
-    totalCorrect += correct;
-    totalWrong += wrong;
-    correct=0;
-    wrong=0;
-
-    cout<<endl;
-
-    printf("\n\nTotal Correct percentage =  %0.2f", (double) (100*totalCorrect)/(totalCorrect+totalWrong) );
-    cout<<" %"<<endl;
     return 0;
-
-
-    /********Error data matrix***********/
-    /************************************/
-
-
-    //goto GenErrorBit;
-
-    /* Error position printing and correction */
-//    if(!errPos.empty())
-//    {
-//        cout<<"In data bit, Error positions are:  ";
-//        for(int i=0; i<errPos.size(); i++)
-//        {
-//            cout<<errPos[i]<<"  ";
-//            xCorrect[errPos[i]] = ( xerror[errPos[i]] ^ Oi[errPos[i]/8] ) ^ ( DED[errPos[i]/8] * sp[errPos[i]%8] );
-//        }
-//    }
-//    cout<<endl<<endl;
-
-
-//    cout<<"************** Original Data Matrix was: ***********\n\n";
-//
-//    for(int i = 0,temp=0,j=0; i<k; i++)
-//    {
-//        if(i%8==0) cout<<" || ";
-//        cout<<x[i]<<" ";
-//        if((i+1)%8==0)
-//        {
-//            cout<<" || ";
-//            cout<<endl;
-//
-//        }
-//    }
-//
-//    cout<<endl<<endl;
-//
-//    cout<<"*************** Corrected Data matrix is: ***************\n\n";
-//    for(int i=0; i<k; i++)
-//    {
-//        if(i%8==0) cout<<" || ";
-//        cout<<xCorrect[i]<<" ";
-//        if( (i+1)%8==0) cout<<" || "<<endl;
-//    }
-
-
 
 }
 
