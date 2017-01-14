@@ -1,2 +1,2 @@
-#Multiple Bit Upset Tolerant Memory Using Matrix Code
+#MBU Tolerant Memory Using Matrix Code and Hamming Code Matching  
 To protect memories from Multiple Bit Upset (MBU). To detect and correct error this method uses Hamming code and parity code. This method is called Matrix code (MC). It can detect and correct single bit upset and multiple bit upset. To detect error from any row and different column of the matrix code, syndrome bit of the Matrix code is used. But to detect error from any row and same column, we transpose the matrix code, generate the syndrome bit again, and find out exact position of error bit(s).
